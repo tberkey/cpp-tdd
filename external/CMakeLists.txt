@@ -6,6 +6,3 @@ include(DownloadAll)
 # External dependencies
 #
 include(ExternalGMock)
-include(ExternalZeroMQ)
-include(ExternalCZMQ)
-include(ExternalMemDB)
