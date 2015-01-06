@@ -19,6 +19,7 @@ set(BINARY_VERSION_FULL "${BINARY_VERSION}.${BINARY_VERSION_PATCH}")
 # Create lists of resource, header and source files
 #
 set(HEADER_FILES
+    Soundex.hpp
    )
 prefix_files(HEADER_FILES "include")
 source_group("Header Files" FILES "${HEADER_FILES}")
