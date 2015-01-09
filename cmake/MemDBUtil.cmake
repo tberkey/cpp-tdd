@@ -41,7 +41,7 @@ macro(fix_default_settings)
 #                set(RUNTIME_LIBRARY_TYPE "-md" CACHE STRING "Type of runtime MSVC runtime library that was linked.")
 #            else()
 #               message(STATUS "${flag_var} - ${${flag_var}}")
-               string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+#               string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
 #               set(RUNTIME_LIBRARY_TYPE "-mt" CACHE STRING "Type of runtime MSVC runtime library that was linked.")
 #               set(MSVC_STATIC_RUNTIME ON CACHE BOOL "Link with MSVC static runtime.")
 #            endif()
@@ -384,7 +384,7 @@ function(memdb_test_binary)
             CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO
            )
             # Replaces /MD with /MT in defaults.
-            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+#            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
     endforeach()
 
     #

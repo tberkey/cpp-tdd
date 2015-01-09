@@ -19,9 +19,14 @@ macro(fix_default_settings)
     #
     # If it wasn't specified, set the default build type to Release.
     #
-    if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None Debug Release." FORCE)
+    if(NOT ${CONFIG_NAME} STREQUAL $(ConfigurationName))
+       SET(CMAKE_BUILD_TYPE $(ConfigurationName) CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    elseif(DEFINED CMAKE_BUILD_TYPE)
+       SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    else()
+       SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
     endif()
+    message(STATUS "Release type is ${CMAKE_BUILD_TYPE}")
 
     if (MSVC)
         set(MSVC_STATIC_RUNTIME ON CACHE BOOL "Link with MSVC static runtime.")
@@ -30,30 +35,18 @@ macro(fix_default_settings)
         # For MSVC, CMake sets certain flags to defaults we want to override.
         #
         foreach(flag_var
-                CMAKE_CXX_FLAGS
+                CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO
                )
-#            if(BUILD_SHARED_LIB)
-#                set(RUNTIME_LIBRARY_TYPE "-md" CACHE STRING "Type of runtime MSVC runtime library that was linked.")
-#            else()
-#                string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-#               set(RUNTIME_LIBRARY_TYPE "-mt" CACHE STRING "Type of runtime MSVC runtime library that was linked.")
-#                set(MSVC_STATIC_RUNTIME ON CACHE BOOL "Link with MSVC static runtime.")
-#            endif()
+#               string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+               message(STATUS "${flag_var} - ${${flag_var}}")
 
-            append_flag("/MP")
+              append_flag("/MP")
 
-            # Replaces /W3 with /W4 in defaults.
-            string(REPLACE "/W3" "/W4" ${flag_var} "${${flag_var}}")
+              # Replaces /W3 with /W4 in defaults.
+              string(REPLACE "/W1" "/W4" ${flag_var} "${${flag_var}}")
+              string(REPLACE "/W2" "/W4" ${flag_var} "${${flag_var}}")
+              string(REPLACE "/W3" "/W4" ${flag_var} "${${flag_var}}")
         endforeach()
-
-        #set release and release with debug info flags
-        set(CMAKE_CXX_FLAGS_RELEASE "/MD /Ox /Ob2 /Ot /Oy /D NDEBUG")
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/MD /Zi /Ox /Ob2 /Ot /Oy")     
-        
-#        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
-#        set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
-#        set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
-#        set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
 
         append_flag("-DWIN32_LEAN_AND_MEAN")
 
@@ -61,10 +54,9 @@ macro(fix_default_settings)
         # Change the default number of file descriptors for sockets, the 
         # default for Windows is 64
         #
-        append_flag("-DFD_SETSIZE=1024")
+        append_flag("-DFD_SETSIZE=4096")
     else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-# TODO: Enable this line when cmake recognizes this flag -- append_flag("-std=c++11")
+        append_flag("-std=c++11")
         append_flag("-Wall")
         append_flag("-pipe")
         append_flag(-fstack-protector -Wl,-z,relro -Wl,-z,now -Wformat-security)

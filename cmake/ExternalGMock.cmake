@@ -17,12 +17,13 @@ ExternalProject_Add(${GMOCK_PROJECT}
   BUILD_IN_SOURCE 0
   CMAKE_ARGS
     -DBUILD_SHARED_LIBS:BOOL=OFF
-#    -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}"
-#    -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
-#    -DCMAKE_CXX_FLAGS_DEBUG=${CMAKE_CXX_FLAGS_DEBUG}
-#    -DCMAKE_CXX_FLAGS_RELEASE=${CMAKE_CXX_FLAGS_RELEASE}
-#    -DCMAKE_CXX_FLAGS_RELWITHDEBINFO=${CMAKE_CXX_FLAGS_RELWITHDEBINFO}
-    -Dgmock_force_shared_crt:BOOL=OFF
+    -Dgmock_force_shared_crt:BOOL=ON
+    -Dgtest_force_shared_crt:BOOL=ON
+    -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}"
+    -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+    -DCMAKE_CXX_FLAGS_DEBUG=${CMAKE_CXX_FLAGS_DEBUG}
+    -DCMAKE_CXX_FLAGS_RELEASE=${CMAKE_CXX_FLAGS_RELEASE}
+    -DCMAKE_CXX_FLAGS_RELWITHDEBINFO=${CMAKE_CXX_FLAGS_RELWITHDEBINFO}
     -DLIBRARY_OUTPUT_PATH:PATH=${OUTPUT_LIBRARY_DIR}
     -DEXECUTABLE_OUTPUT_PATH:PATH=${EXECUTABLE_OUTPUT_PATH}
   )
@@ -32,12 +33,13 @@ set_target_properties("${GMOCK_PROJECT}" PROPERTIES FOLDER "External Libraries" 
 if(DEBUG_CMAKE)
     message(STATUS "  GMOCK Configuration")
     message(STATUS "    -DBUILD_SHARED_LIBS:BOOL=OFF")
+    message(STATUS "    -Dgmock_force_shared_crt:BOOL=ON")
+    message(STATUS "    -Dgtest_force_shared_crt:BOOL=ON")
     message(STATUS "    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
     message(STATUS "    -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}")
     message(STATUS "    -DCMAKE_CXX_FLAGS_DEBUG=${CMAKE_CXX_FLAGS_DEBUG}")
     message(STATUS "    -DCMAKE_CXX_FLAGS_RELEASE=${CMAKE_CXX_FLAGS_RELEASE}")
     message(STATUS "    -DCMAKE_CXX_FLAGS_RELWITHDEBINFO=${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
-    message(STATUS "    -Dgmock_force_shared_crt:BOOL=${MSVC_STATIC_RUNTIME}")
     message(STATUS "    -DLIBRARY_OUTPUT_PATH_DEBUG:PATH=${OUTPUT_LIBRARY_DIR}")
     message(STATUS "    -DEXECUTABLE_OUTPUT_PATH_DEBUG:PATH=${EXECUTABLE_OUTPUT}/${OUTPUT_PATH}")
     message(STATUS "")
@@ -123,7 +125,7 @@ message(STATUS "  GMOCK_MAIN_LIBRARIES")
 message(STATUS "    Debug              - ${GMOCK_MAIN_LIBRARIES_DEBUG}")
 message(STATUS "    Release            - ${GMOCK_MAIN_LIBRARIES_RELEASE}")
 message(STATUS "    RelWithDebInfo     - ${GMOCK_MAIN_LIBRARIES_RELWITHDEBINFO}")
-
+message(STATUS "")
 message(STATUS "Finished Configuring ${GMOCK_PROJECT} External Project")
 message(STATUS "****************************************************************************************")
 
